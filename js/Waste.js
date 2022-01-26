@@ -4,7 +4,7 @@ class Waste extends GameObject {
     /* Each gameObject MUST have a constructor() and a render() method.        */
     /* If the object animates, then it must also have an updateState() method. */
 
-    constructor(wasteImg, centreX, y, speed, index, type, splittable) {
+    constructor(wasteImg, centreX, y, speed, index, type, splittable, name) {
         super(5); /* as this class extends from GameObject, you must always call super() */
 
         /* These variables depend on the object */
@@ -22,7 +22,7 @@ class Waste extends GameObject {
         this.splitted = false
         this.visible = false
         this.wasteImg = wasteImg;
-
+        this.name = name
     }
 
     updateState() {
@@ -31,7 +31,16 @@ class Waste extends GameObject {
 
     render() {
         let sprite = new StaticImage(this.wasteImg, this.x, this.y, this.width, this.height)
+        let redcircle = new StaticImage(redCircleImg, this.x, this.y, this.width, this.height)
+        let yellowcircle = new StaticImage(yellowCircleImg, this.x, this.y, this.width, this.height)
         sprite.render()
+        if(this.chosen){
+            if(this.splittable){
+                yellowcircle.render()
+            }else {
+                redcircle.render()
+            }
+        }
     }
 
     moveLeft() {

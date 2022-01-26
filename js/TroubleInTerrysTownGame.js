@@ -6,7 +6,6 @@
 const amount = 100
 let height = -100
 let score_ = 0
-
 let generateRandomFall = (height) => {
     //  let fallingSpeed = (Math.random() * 1) + 0.2
     let fallingSpeed = 0.5
@@ -15,47 +14,66 @@ let generateRandomFall = (height) => {
     wasteType = typeFilter[wasteType]
     let wasteSprite = null
     let wasteImg = new Image()
-
     switch (wasteType) {
-        case PLASTIC:
+        case PLASTIC:       
             wasteSprite = Math.floor(Math.random() * plasticWaste.length)
             wasteImg.src = plasticWaste[wasteSprite]
-            waste[numberOfWaste] = new Waste(wasteImg, Math.floor(Math.random() * ((canvas.width - 200) - 30)) + 45, height, fallingSpeed, numberOfWaste, wasteType, true);
+            if(wasteImg.src == splittingWaste[0]){
+                waste[numberOfWaste] = new Waste(wasteImg, Math.floor(Math.random() * ((canvas.width - 200) - 30)) + 45, height, fallingSpeed, numberOfWaste, wasteType, true, plasticWaste[wasteSprite]);
+            }
+            else
+              waste[numberOfWaste] = new Waste(wasteImg, Math.floor(Math.random() * ((canvas.width - 200) - 30)) + 45, height, fallingSpeed, numberOfWaste, wasteType, false, plasticWaste[wasteSprite]);
             break;
         case PAPER:
             wasteSprite = Math.floor(Math.random() * paperWaste.length)
             wasteImg.src = paperWaste[wasteSprite]
-            waste[numberOfWaste] = new Waste(wasteImg, Math.floor(Math.random() * ((canvas.width - 200) - 30)) + 45, height, fallingSpeed, numberOfWaste, wasteType, true);
+            if(wasteImg.src == splittingWaste[4]){
+                waste[numberOfWaste] = new Waste(wasteImg, Math.floor(Math.random() * ((canvas.width - 200) - 30)) + 45, height, fallingSpeed, numberOfWaste, wasteType, true, paperWaste[wasteSprite]);
+            }
+            else
+                waste[numberOfWaste] = new Waste(wasteImg, Math.floor(Math.random() * ((canvas.width - 200) - 30)) + 45, height, fallingSpeed, numberOfWaste, wasteType, false, paperWaste[wasteSprite]);
             break;
         case METAL:
             wasteSprite = Math.floor(Math.random() * metalWaste.length)
             wasteImg.src = metalWaste[wasteSprite]
-            waste[numberOfWaste] = new Waste(wasteImg, Math.floor(Math.random() * ((canvas.width - 200) - 30)) + 45, height, fallingSpeed, numberOfWaste, wasteType, true);
+            waste[numberOfWaste] = new Waste(wasteImg, Math.floor(Math.random() * ((canvas.width - 200) - 30)) + 45, height, fallingSpeed, numberOfWaste, wasteType, false, metalWaste[wasteSprite]);
             break;
         case GLASS:
             wasteSprite = Math.floor(Math.random() * glassWaste.length)
             wasteImg.src = glassWaste[wasteSprite]
-            waste[numberOfWaste] = new Waste(wasteImg, Math.floor(Math.random() * ((canvas.width - 200) - 30)) + 45, height, fallingSpeed, numberOfWaste, wasteType, true);
+
+            if( glassWaste[wasteSprite] === splittingWaste[1]){
+                waste[numberOfWaste] = new Waste(wasteImg, Math.floor(Math.random() * ((canvas.width - 200) - 30)) + 45, height, fallingSpeed, numberOfWaste, wasteType, true, glassWaste[wasteSprite]);
+            }else
+                waste[numberOfWaste] = new Waste(wasteImg, Math.floor(Math.random() * ((canvas.width - 200) - 30)) + 45, height, fallingSpeed, numberOfWaste, wasteType, false, glassWaste[wasteSprite]);
             break;
         case COMPOST:
             wasteSprite = Math.floor(Math.random() * compostWaste.length)
             wasteImg.src = compostWaste[wasteSprite]
-            waste[numberOfWaste] = new Waste(wasteImg, Math.floor(Math.random() * ((canvas.width - 200) - 30)) + 45, height, fallingSpeed, numberOfWaste, wasteType, true);
+            waste[numberOfWaste] = new Waste(wasteImg, Math.floor(Math.random() * ((canvas.width - 200) - 30)) + 45, height, fallingSpeed, numberOfWaste, wasteType, false, compostWaste[wasteSprite]);
             break;
         case TEXTILE:
             wasteSprite = Math.floor(Math.random() * textileWaste.length)
             wasteImg.src = textileWaste[wasteSprite]
-            waste[numberOfWaste] = new Waste(wasteImg, Math.floor(Math.random() * ((canvas.width - 200) - 30)) + 45, height, fallingSpeed, numberOfWaste, wasteType, true);
+            waste[numberOfWaste] = new Waste(wasteImg, Math.floor(Math.random() * ((canvas.width - 200) - 30)) + 45, height, fallingSpeed, numberOfWaste, wasteType, false, textileWaste[wasteSprite]);
             break;
         case TOXIC:
             wasteSprite = Math.floor(Math.random() * toxicWaste.length)
             wasteImg.src = toxicWaste[wasteSprite]
-            waste[numberOfWaste] = new Waste(wasteImg, Math.floor(Math.random() * ((canvas.width - 200) - 30)) + 45, height, fallingSpeed, numberOfWaste, wasteType, true);
+            if(toxicWaste[wasteSprite] === splittingWaste[2]){
+                waste[numberOfWaste] = new Waste(wasteImg, Math.floor(Math.random() * ((canvas.width - 200) - 30)) + 45, height, fallingSpeed, numberOfWaste, wasteType, true, toxicWaste[wasteSprite]);
+            }else if(toxicWaste[wasteSprite]== splittingWaste[0]){
+                waste[numberOfWaste] = new Waste(wasteImg, Math.floor(Math.random() * ((canvas.width - 200) - 30)) + 45, height, fallingSpeed, numberOfWaste, wasteType, true, toxicWaste[wasteSprite]);
+            }else
+                waste[numberOfWaste] = new Waste(wasteImg, Math.floor(Math.random() * ((canvas.width - 200) - 30)) + 45, height, fallingSpeed, numberOfWaste, wasteType, false, toxicWaste[wasteSprite]);
             break;
         case ELECTRONICS:
             wasteSprite = Math.floor(Math.random() * electronicWaste.length)
             wasteImg.src = electronicWaste[wasteSprite]
-            waste[numberOfWaste] = new Waste(wasteImg, Math.floor(Math.random() * ((canvas.width - 200) - 30)) + 45, height, fallingSpeed, numberOfWaste, wasteType, true);
+            if(wasteImg.src == splittingWaste[3]){
+                waste[numberOfWaste] = new Waste(wasteImg, Math.floor(Math.random() * ((canvas.width - 200) - 30)) + 45, height, fallingSpeed, numberOfWaste, wasteType, true, electronicWaste[wasteSprite]);
+            }else
+                waste[numberOfWaste] = new Waste(wasteImg, Math.floor(Math.random() * ((canvas.width - 200) - 30)) + 45, height, fallingSpeed, numberOfWaste, wasteType, false, electronicWaste[wasteSprite]);
             break;
     }
 
@@ -90,10 +108,12 @@ class TroubleInTerrysTownGame extends CanvasGame {
         for (let i = 0; i < numberOfWaste; i++) {
             for (let j=0; j<typeFilter.length; j++){
                 if(bins[j].pointIsInsideBin(waste[i].getX(), waste[i].getY()) && !waste[i].hit){
-
                     if (waste[i].type == typeFilter[j]){
                     score_ += 200
                     correctDisposalSound.play()
+                    Terry.setImage(TerryImg)
+                }else{
+                    Terry.setImage(terry_wrong)
                 }
                     waste[i].hit = true
                     stext = score_;
@@ -175,17 +195,24 @@ class TroubleInTerrysTownGame extends CanvasGame {
         for(let i=0; i<bins.length; i++){
             bins[i].render()
         }
-
+        
+        Terry.render()
         game_border.render()
         scoreText.render()
         scoreLabel.render()
+        terryLabel.render()
         timeLabel.render()
+        level1_btn.render()
+        level2_btn.render()
+        level3_btn.render()
+
 
     }
     playGameLoop() {
         super.playGameLoop()
         if (timer.isFinished()) {
             this.stopGame()
+            timeOverLabel.render()
         }
     }
 

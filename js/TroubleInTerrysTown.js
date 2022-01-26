@@ -26,10 +26,23 @@ let paperBin = new Image();
 paperBin.src = "images/bins/paper_v2.png"
 let plasticBin = new Image();
 plasticBin.src = "images/bins/plastic_v2.png"
-let textilesBin = new Image();
-textilesBin.src = "images/bins/textiles_v2.png"
+let textileBin = new Image();
+textileBin.src = "images/bins/textiles_v2.png"
 let toxicBin = new Image();
 toxicBin.src = "images/bins/toxic_v2.png"
+
+let TerryImg = new Image();
+TerryImg.src = "images/Terry/terry_guide.gif"
+
+let terry_wrong = new Image()
+terry_wrong.src = "images/Terry/terry_wrong.gif"
+
+let redCircleImg = new Image()
+redCircleImg.src = "images/Sprites/redcircle.png"
+let yellowCircleImg = new Image()
+yellowCircleImg.src = "images/Sprites/yellowcircle.png"
+
+let LEVEL = 0;
 
 const PAPER = 1;
 const PLASTIC = 2;
@@ -40,9 +53,7 @@ const METAL = 6;
 const TOXIC = 7;
 const ELECTRONICS = 8
 
-const glassWaste = ["images/Sprites/glass_0.png", "images/Sprites/glass_1.png",
-    "images/Sprites/glass_2.png", "images/Sprites/splitable_1.png",
-    "images/Sprites/splitable_0.png"]
+const glassWaste = ["images/Sprites/splitable_1.png"]
 const plasticWaste = ["images/Sprites/plasticbag.png", "images/Sprites/3_plastic_split.png",
     "images/Sprites/bottle_cap.png", "images/Sprites/Lid.png"]
 
@@ -65,12 +76,23 @@ const electronicWaste = ["images/Sprites/splitable_3.png", "images/Sprites/Phone
 
 const paperWaste = ["images/Sprites/4_paper_split.png"]
 
+const splittingWaste = ["images/Sprites/splitable_0.png", "images/Sprites/splitable_1.png",
+    "images/Sprites/splitable_2.png", "images/Sprites/splitable_3.png",
+    "images/Sprites/splitable_4.png"]
+
+const split0 = ["images/Sprites/PerfumeLiquid.png", "images/Sprites/splitable_0.png"]
+const split1 = ["images/Sprites/Lid.png", "images/Sprites/splitable_1.png"]
+const split2 = ["images/Sprites/splitable_2.png", "images/Sprites/toxic_waste.png"]
+const split3 = ["images/Sprites/3_plastic_split.png", "images/Sprites/3_metal_split.png"]
+const split4 = ["images/Sprites/4_paper_split.png", "images/Sprites/bottle_cap.png"]
 
 
-const typeFilter = [COMPOST, GLASS, PLASTIC]
+//let typeFilter = [TOXIC, METAL, TEXTILE]
+//let typeFilter = [COMPOST, GLASS, PLASTIC]
+let typeFilter = [PLASTIC, GLASS, METAL, ELECTRONICS]
 
 
-const calcY = (x) =>{
+const calcY = (x) => {
     return Math.log(x)
 }
 
@@ -87,18 +109,25 @@ let scoreLabel = null
 let score = null
 let background = null
 let game_border = null
+let Terry = null
+let terryLabel = null
+
+let timeOverLabel = null
 
 let backgroundSound = null
 let correctDisposalSound = null
 let selectWasteSound = null
 let splitWasteSound = null
 
-
 let waste = [];
 let visibleWaste = [];
 let bins = []
 let numberOfWaste = 0;
 let chosenIndex = 0;
+
+let level1_btn = null;
+let level2_btn = null;
+let level3_btn = null;
 
 
 function sound(src) {
@@ -110,12 +139,12 @@ function sound(src) {
     this.sound.setAttribute("muted", "true")
     this.sound.style.display = "none";
     document.body.appendChild(this.sound);
-    this.play = function(){
+    this.play = function () {
         this.sound.play();
     }
-    this.stop = function(){
+    this.stop = function () {
         this.sound.pause();
-    }    
+    }
 }
 /******************* END OF Declare game specific data and functions *****************/
 
@@ -145,12 +174,14 @@ function playGame() {
     // gameObjects[BACKGROUND] = new StaticImage(backgroundImage, 0, 0, canvas.width, canvas.height);
     background = new StaticImage(backgroundImage, 30, 0, canvas.width - 180, canvas.height)
     game_border = new StaticImage(borderImage, 0, 0, canvas.width, canvas.height)
+    Terry = new StaticImage(TerryImg, 540, 515, 140, 140)
 
 
-    for(let i=0; i<typeFilter.length; i++){
-        let binWidth = (canvas.width - 1500 / typeFilter.length) * i + 50
+
+    for (let i = 0; i < typeFilter.length; i++) {
+        let binWidth = (canvas.width - 2250 / typeFilter.length) * i + 50
         console.log(binWidth)
-        switch(typeFilter[i]){
+        switch (typeFilter[i]) {
             case PLASTIC:
                 bins[i] = new Bin(plasticBin, binWidth, canvas.height - 140, 90, 110, PLASTIC);
                 break;
@@ -179,16 +210,24 @@ function playGame() {
     }
 
 
-  //  bin1 = new Bin(compostBin, 50, canvas.height - 140, 90, 110, COMPOST);
-  //  bin2 = new Bin(glassBin, (canvas.width - 200) / 2 + 10, canvas.height - 140, 90, 110, GLASS);
- //   bin3 = new Bin(plasticBin, (canvas.width - 200) - 40, canvas.height - 140, 90, 110, PLASTIC);
+    //  bin1 = new Bin(compostBin, 50, canvas.height - 140, 90, 110, COMPOST);
+    //  bin2 = new Bin(glassBin, (canvas.width - 200) / 2 + 10, canvas.height - 140, 90, 110, GLASS);
+    //   bin3 = new Bin(plasticBin, (canvas.width - 200) - 40, canvas.height - 140, 90, 110, PLASTIC);
     score = new Score(0)
     stext = score.getValue()
     scoreText = new ScoreText(stext, 590, 110, "arial", 25, "black")
-    timer = new Timer(590, 310, 60, "arial", 25, "black")
+    timer = new Timer(590, 310, 30, "arial", 25, "black")
 
     scoreLabel = new StaticText("Your score", 555, 210, "arial", 22, "black")
     timeLabel = new StaticText("Time left", 560, 420, "arial", 22, "black")
+    terryLabel = new StaticText("Terry", 560, 650, "arial", 22, "black")
+
+    timeOverLabel = new StaticText("Time's over!", ((canvas.width - 200) / 2) - 50, canvas.height / 2, "arial", 40, "black")
+
+
+    level1_btn = new Button(0, 670, TEXT_WIDTH, 30, "Level One");
+    level2_btn = new Button(120, 670, TEXT_WIDTH, 30, "Level Two");
+    level3_btn = new Button(243, 670, TEXT_WIDTH, 30, "Level Three");
 
 
 
@@ -201,11 +240,14 @@ function playGame() {
     correctDisposalSound = new sound("/audio/correct_disposal_v1.mp3")
     selectWasteSound = new sound("/audio/select_waste_v1.mp3")
     splitWasteSound = new sound("/audio/split_waste_v1.mp3")
-   
+
     backgroundSound.play()
     /* Always play the game */
     game.start();
     timer.start();
+    level1_btn.start();
+    level2_btn.start();
+    level3_btn.start();
 
 
     /* If they are needed, then include any game-specific mouse and keyboard listners */
@@ -243,37 +285,125 @@ function playGame() {
         // }
         else if (e.keyCode === 32) // space bar
         {
-            waste[chosenIndex].setSpeed(5);
-            waste[chosenIndex].setChosen(false);
-            waste[chosenIndex + 1].setChosen(true);
+            if (!timer.isFinished()) {
+                waste[chosenIndex].setSpeed(5);
+                waste[chosenIndex].setChosen(false);
+                waste[chosenIndex + 1].setChosen(true);
+            }
         }
 
         else if (e.keyCode === 83) // s
-        { 
+        {
             let wasteSprite = null
             let wasteImg = new Image()
 
-            if(waste[chosenIndex].isSplittable() && !waste[chosenIndex].isSplitted()){
-                console.log("splittable and not splitted")
+            /* if(waste[chosenIndex].isSplittable() && !waste[chosenIndex].isSplitted()){
+                 console.log("splittable and not splitted")
+                 let original = waste[chosenIndex]
+                 let type = original.type
+ 
+ 
+                 splitWasteSound.play()
+                 waste[chosenIndex] = new Waste(original.getX()-15, calcY(original.getX())*6, original.getFallingSpeed(), original.getIndex(), original.getType(), false)
+                 console.log(waste[chosenIndex])
+                 
+                 waste.push(new Waste(original.getX()+15, calcY(original.getX()), original.getFallingSpeed(), waste.length, original.getType(), false))
+                 
+                 waste[chosenIndex].setSplitted(true)
+             
+                 waste[original.getIndex()].start()
+                 waste[waste.length-1].start()
+ 
+                 console.log( waste[original.getIndex()])
+                 waste[original.getIndex()].setChosen(true)
+              */
+
+            if (waste[chosenIndex].isSplittable() && !waste[chosenIndex].isSplitted()) {
                 let original = waste[chosenIndex]
-                let type = original.type
+                let wasteName = original.name
+                let wasteImg2 = new Image()
+                let wasteImg3 = new Image()
+                for (let i = 0; i < splittingWaste.length; i++) {
+                    console.log(wasteName == splittingWaste[i])
+                }
 
-                
-                splitWasteSound.play()
-                waste[chosenIndex] = new Waste(original.getX()-15, calcY(original.getX())*6, original.getFallingSpeed(), original.getIndex(), original.getType(), false)
-                console.log(waste[chosenIndex])
-                
-                waste.push(new Waste(original.getX()+15, calcY(original.getX()), original.getFallingSpeed(), waste.length, original.getType(), false))
-                
-                waste[chosenIndex].setSplitted(true)
-            
-                waste[original.getIndex()].start()
-                waste[waste.length-1].start()
+                switch (wasteName) {
+                    case splittingWaste[0]:
+                        wasteImg2.src = split0[0]
+                        waste[chosenIndex] = new Waste(wasteImg2, 300, original.getY(), original.getFallingSpeed(), original.getIndex(), original.getType(), false)
+                        wasteImg3.src = split0[1]
+                        waste.push(new Waste(wasteImg3, 400, original.getX(), original.getFallingSpeed(), waste.length, original.getType(), false))
+                        console.log(waste.length)
+                        break
+                    case splittingWaste[1]:
+                        wasteImg2.src = split1[0]
+                        console.log(wasteImg2)
+                        waste[chosenIndex] = new Waste(wasteImg2, 300, original.getY(), original.getFallingSpeed(), original.getIndex(), original.getType(), false, splittingWaste[1])
+                        wasteImg3.src = split1[1]
+                        waste.push(new Waste(wasteImg3, 400, original.getY(), original.getFallingSpeed(), waste.length, original.getType(), false, splittingWaste[1]))
+                        waste[original.getIndex()].start()
+                        waste[waste.length - 1].start()
+                        break
+                    case splittingWaste[2]:
+                        wasteImg2.src = split2[0]
+                        waste[chosenIndex] = new Waste(wasteImg2, 300, original.getY(), original.getFallingSpeed(), original.getIndex(), original.getType(), false)
+                        wasteImg3.src = split2[1]
+                        waste.push(new Waste(wasteImg3, 400, original.getY(), original.getFallingSpeed(), waste.length, original.getType(), false))
+                        break
+                    case splittingWaste[3]:
+                        wasteImg2.src = split3[0]
+                        waste[chosenIndex] = new Waste(wasteImg2, 300, original.getY(), original.getFallingSpeed(), original.getIndex(), original.getType(), false)
+                        wasteImg3.src = split3[1]
+                        waste.push(new Waste(wasteImg3, 400, original.getY(), original.getFallingSpeed(), waste.length, original.getType(), false))
+                        break
+                    case splittingWaste[4]:
+                        wasteImg2.src = split4[0]
+                        waste[chosenIndex] = new Waste(wasteImg2, 300, original.getY(), original.getFallingSpeed(), original.getIndex(), original.getType(), false)
+                        wasteImg3.src = split4[1]
+                        waste.push(new Waste(wasteImg3, 400, original.getY(), original.getFallingSpeed(), waste.length, original.getType(), false))
+                        break
 
-                console.log( waste[original.getIndex()])
-                waste[original.getIndex()].setChosen(true)
-              
+                }
+                waste[chosenIndex].setChosen(true)
             }
+        }
+    });
+    document.getElementById("gameCanvas").addEventListener("mousedown", function (e) {
+        if (e.which === 1)  // left mouse button
+        {
+            let canvasBoundingRectangle = document.getElementById("gameCanvas").getBoundingClientRect();
+            let mouseX = e.clientX - canvasBoundingRectangle.left;
+            let mouseY = e.clientY - canvasBoundingRectangle.top;
+
+            if (level1_btn.pointIsInsideBoundingRectangle(mouseX, mouseY)) {
+                LEVEL = 0
+                typeFilter = [COMPOST, GLASS, PLASTIC]
+                console.log(typeFilter)
+                location.reload()
+            }
+            else if (level2_btn.pointIsInsideBoundingRectangle(mouseX, mouseY)) {
+                LEVEL = 1
+                typeFilter = [TOXIC, TEXTILE, METAL]
+                console.log(typeFilter)
+                location.reload()
+            }
+            else if (level3_btn.pointIsInsideBoundingRectangle(mouseX, mouseY)) {
+                LEVEL = 2
+                location.reload()
+            }
+
+        }
+    });
+    document.getElementById("gameCanvas").addEventListener("mousemove", function (e) {
+        if (e.which === 0) // no button selected
+        {
+            let canvasBoundingRectangle = document.getElementById("gameCanvas").getBoundingClientRect();
+            let mouseX = e.clientX - canvasBoundingRectangle.left;
+            let mouseY = e.clientY - canvasBoundingRectangle.top;
+
+            level1_btn.pointIsInsideBoundingRectangle(mouseX, mouseY);
+            level2_btn.pointIsInsideBoundingRectangle(mouseX, mouseY);
+            level3_btn.pointIsInsideBoundingRectangle(mouseX, mouseY);
         }
     });
 }

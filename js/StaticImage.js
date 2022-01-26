@@ -21,4 +21,8 @@ class StaticImage extends GameObject
     {
         ctx.drawImage(this.image, this.x, this.y, this.width, this.height);
     }
+
+    setImage(image){
+        this.image = image
+    }
 }
